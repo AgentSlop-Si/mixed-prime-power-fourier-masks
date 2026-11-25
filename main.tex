@@ -1,0 +1,585 @@
+\documentclass[11pt,reqno]{amsart}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage[margin=1.05in]{geometry}
+\usepackage{microtype}
+\usepackage{xcolor}
+\PassOptionsToPackage{hyphens}{url}
+\usepackage[colorlinks=true,breaklinks=true,linkcolor=blue!60!black,citecolor=blue!60!black,urlcolor=blue!60!black]{hyperref}
+
+\numberwithin{equation}{section}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\GL}{\operatorname{GL}}
+\newcommand{\tr}{\operatorname{tr}}
+\newcommand{\rank}{\operatorname{rank}}
+
+\title[Mixed Prime-Power Masks and Odd Codimension-Two Gaps]{Mixed Prime-Power Fourier Masks and Quantitative\\Odd Codimension-Two Spectral Gaps}
+
+\author[D. Kuttymbek]{Daniyar Kuttymbek}
+\address{Astana, Kazakhstan}
+\email{daniyar.kuttymbek@gmail.com}
+
+\author[A. Kuttymbek]{Adilkhan Kuttymbek}
+\address{Astana, Kazakhstan}
+\email{adilkhan.kuttymbek@gmail.com}
+
+\author[D. Kuttymbek]{Dayana Kuttymbek}
+\address{Astana, Kazakhstan}
+\email{dayanamiu74@gmail.com}
+
+\author[A. Kolpenova]{Amina Kolpenova}
+\address{Astana, Kazakhstan}
+\email{aminakolpenova@gmail.com}
+
+\author[M. Kottumbekov]{Mukhammadali Kottumbekov}
+\address{Astana, Kazakhstan}
+\email{mukhammadalikottumbek@gmail.com}
+
+\date{\today}
+\subjclass[2020]{Primary 05B20, 15B10; Secondary 11R18, 42A99, 15A60}
+\keywords{Discrete Fourier matrix, orthogonal binary Fourier masks, prime-power cyclotomic descent, mixed prime-power orders, sparse inverse approximation, flat unitary matrices, spectral gap}
+
+\begin{document}
+
+\begin{abstract}
+Let $N\ge 2$, let $\zeta_N$ be a primitive complex $N$-th root of unity, and let $F_N\in\C^{N\times N}$ be the normalized unitary discrete Fourier matrix with entries $(F_N)_{rc}=N^{-1/2}\zeta_N^{rc}$. In earlier work, the authors characterized sharpness of the spectral-norm sparse-inverse lower bound $\Delta(N,s)\ge\sqrt{1-s/N}$ in terms of \emph{orthogonal binary Fourier masks} $D_{rc}=R_{rc}\zeta_N^{rc}$ ($R\in\{0,1\}^{N\times N}$, $DD^*=D^*D=dI_N$, $d=N-s$), classified all degrees at odd semiprimes $N=pq$, and left open higher composite orders and quantitative spectral separation whenever no mask exists.
+
+We establish three results advancing both directions in the original unrestricted fixed-phase model:
+\begin{enumerate}[label=(\arabic*),leftmargin=1.8em]
+\item \emph{Enlarged weighted prime-power classification:} Using a unitary $p$-point character-filtration descent on a closed class of square matrices with arbitrary repeated labels modulo $p^a$ and varying row weights $p^{k_i/2}$, we prove that every matrix in this class with $A^*A=AA^*=dI_m$ ($d>0$) satisfies $d=p^b$ ($0\le b\le \max_i k_i+a$). Unlike semiprimes, prime-power masks need not decompose into $d\times d$ blocks---illustrated by an explicit connected $(N,d)=(8,4)$ mask whose first-level descent produces unequal row weights.
+\item \emph{Mixed prime-power low-degree classification:} For every pair of distinct primes $p<q$ (including $p=2$), every $a\ge 2$, and $N=p^a q$, a short-overlap $q$-character erasure lemma maps every orthogonal binary Fourier mask of degree $0<d<q$ into the enlarged repeated-label prime-power class at character order $p^a$. Consequently, for $0\le d<q$, a mask of degree $d$ exists if and only if $d=0$ or $d=p^j$ ($0\le j\le a$, $p^j<q$), and $\Delta(N,N-d)=\sqrt{d/N}$ holds precisely at these $p$-powers, with strict separation otherwise.
+\item \emph{Quantitative odd codimension-two spectral gap:} Directly resolving Open Problem~(4) of our previous paper at codimension $2$ for all odd $N\ge 3$, we combine exact unrestricted-model coefficient-stability identities with a phase-insensitive two-column obstruction to prove that every odd-order flat unitary matrix $F$ (in particular $F_N$) satisfies
+\[
+\Delta_F(N,N-2)^2
+\ge \frac{2}{N} + \frac{g^2}{\bigl(\sqrt{N}+g\sqrt{N/(N-2)}\bigr)^2}
+\ge \frac{9-4\sqrt{3}}{N},
+\qquad g=\frac{\sqrt{3}-1}{2},
+\]
+yielding a uniform relative norm separation $\Delta_F(N,N-2)/\sqrt{2/N}\ge \sqrt{(9-4\sqrt{3})/2}>1.01779$ (with the sharper lower-bound coefficient approaching $3-\sqrt{3}/2\approx 2.13397$ as $N\to\infty$).
+\end{enumerate}
+\end{abstract}
+
+\maketitle
+
+\section{Introduction and main results}
+\label{sec:intro}
+
+Let $N\ge 2$ be an integer, let $\zeta=\zeta_N$ be a primitive complex $N$-th root of unity, and let $F_N\in\C^{N\times N}$ be the normalized unitary discrete Fourier matrix with entries $(F_N)_{rc}=N^{-1/2}\zeta^{rc}$ ($0\le r,c<N$). Following~\cite{KKKKK26}, a binary matrix $R\in\{0,1\}^{N\times N}$ is an \emph{orthogonal binary Fourier mask of degree $d$} if its entrywise masked Fourier matrix
+\begin{equation}
+\label{eq:mask-def}
+D_{rc} = R_{rc}\zeta^{rc},\qquad 0\le r,c<N,
+\end{equation}
+satisfies $DD^*=dI_N$ or $D^*D=dI_N$. Whenever $d>0$, square invertibility makes the two scalar Gram identities equivalent and forces every row and column of $R$ to contain exactly $d$ ones; when $d=0$, $R=0$.
+
+For any unitary matrix $F\in\C^{N\times N}$ and integer row-sparsity budget $1\le s\le N-1$, define the spectral-norm sparse-inverse approximation infimum
+\begin{equation}
+\label{eq:delta-def}
+\Delta_F(N,s) = \inf\bigl\{\|M - F\|_2 : M\in\GL_N(\C),\ \text{every row of } M^{-1}\text{ has at most }s\text{ nonzeros}\bigr\},
+\end{equation}
+writing $\Delta(N,s):=\Delta_{F_N}(N,s)$ for the Fourier matrix. Supports, complex entries, and condition numbers of $M$ are completely unrestricted. In~\cite[Theorem~1.1]{KKKKK26}, we proved that $\Delta(N,s)\ge\sqrt{1-s/N}$ always holds, with equality if and only if there exists an orthogonal binary Fourier mask of degree $d=N-s$, and with strict separation $\Delta(N,s)>\sqrt{1-s/N}$ whenever no such mask exists. We also resolved degree existence completely at odd semiprimes $N=pq$~\cite[Theorem~1.2]{KKKKK26}, where $d\in\{0,1,p,q,pq\}$, and proved block rigidity at prime degrees~\cite[Theorems~1.3--1.5]{KKKKK26}. Two central problems remained open in~\cite[Section~6.1]{KKKKK26}: extending the degree classification to composite orders with repeated prime factors such as $N=p^a q$ (Open Problem~(1)), and replacing the qualitative compactness separation $\Delta(N,s)>\sqrt{1-s/N}$ with explicit quantitative spectral gaps (Open Problem~(4)).
+
+This paper addresses both questions. First, at prime-power orders $N=p^a$, orthogonal masks need \emph{not} decompose into disjoint $d\times d$ blocks: an explicit connected binary mask at $(N,d)=(8,4)$ (Example~\ref{ex:connected84}) refutes full-block rigidity. To classify degrees uniformly in $p$ and $a$ without imposing any support-block assumption, we work in a larger closed class of weighted repeated-label character matrices.
+
+\begin{theorem}[Enlarged weighted prime-power classification]
+\label{thm:prime-power}
+Fix a prime $p$ and an integer $a\ge 0$, and let $\zeta_{p^a}$ be a primitive complex $p^a$-th root of unity (with $\zeta_1=1$). Let $m\ge 1$ be any positive integer, let $x_1,\ldots,x_m,y_1,\ldots,y_m\in\Z/p^a\Z$ be arbitrary (possibly repeated) labels, let $k_1,\ldots,k_m\ge 0$ be integers, and let $T\in\{0,1\}^{m\times m}$ be a binary matrix. Suppose the square matrix
+\begin{equation}
+\label{eq:weighted-class}
+A_{ij} = p^{k_i/2} T_{ij} \zeta_{p^a}^{x_i y_j},\qquad 1\le i,j\le m,
+\end{equation}
+satisfies $A^*A = AA^* = dI_m$ for some positive real number $d>0$. Then $d = p^b$ for an integer $b$ satisfying $0\le b\le \max_{1\le i\le m} k_i + a$.
+
+In particular, for an unweighted binary Fourier mask of prime-power order $N=p^a$ ($a\ge 1$), an orthogonal mask of degree $1\le d\le p^a$ exists if and only if $d=p^b$ ($0\le b\le a$). Equivalently, for $1\le d<p^a$,
+\[
+\Delta(p^a, p^a-d) = \sqrt{\frac{d}{p^a}} \iff d = p^b \quad (0\le b<a),
+\]
+with strict inequality $\Delta(p^a,p^a-d)>\sqrt{d/p^a}$ for every other $1\le d<p^a$.
+\end{theorem}
+
+The extra generality of Theorem~\ref{thm:prime-power}---arbitrary matrix dimension $m$ independent of $p^a$ and repeated row/column labels---turns out to be the exact interface needed to handle mixed prime-power orders $N=p^a q$ below the larger prime $q$. Erasing the $q$-character of any short-overlap mask preserves both scalar Grams identically and places the resulting $p^a q\times p^a q$ matrix straight into~\eqref{eq:weighted-class} with character level $a$ and $q$-fold repeated labels.
+
+\begin{theorem}[Low-degree classification at mixed prime-power orders $N=p^a q$]
+\label{thm:mixed-low}
+Let $p<q$ be distinct primes (including $p=2$), let $a\ge 2$, let $N=p^a q$, and let $\zeta$ be any primitive complex $N$-th root of unity. For any integer $0\le d<q$, there exists a binary $N\times N$ matrix $R$ such that $D_{rc}=R_{rc}\zeta^{rc}$ satisfies $D^*D=dI_N$ (or $DD^*=dI_N$) if and only if
+\begin{equation}
+\label{eq:mixed-deg}
+d = 0 \qquad\text{or}\qquad d = p^j \quad (0\le j\le a,\; p^j < q).
+\end{equation}
+Equivalently, for $0<d<q$ and $s=N-d$,
+\[
+\Delta(N, N-d) = \sqrt{\frac{d}{N}} \iff d = p^j \quad (0\le j\le a,\; p^j < q),
+\]
+with strict inequality $\Delta(N,N-d)>\sqrt{d/N}$ for every other integer $0<d<q$.
+\end{theorem}
+
+At the prime-square slice $N=p^2 q$, since $q$ is prime and $p\ge 2$ we cannot have $q=p^2$, so the allowed degrees strictly below $q$ are $\{0,1,p\}$ when $p<q<p^2$ and $\{0,1,p,p^2\}$ when $q>p^2$. At the boundary $d=q$, the divisor-block construction~\cite[Section~2.1]{KKKKK26} supplies a mask for every $N=p^a q$; as shown in Remark~\ref{rem:boundary-guard}, the strict hypothesis $d<q$ is necessary for the character-erasure step itself. (The same reduction also applies at $a=1$, recovering the low-degree semiprime exclusion~\cite[Proposition~3.1]{KKKKK26}.)
+
+Our third main theorem resolves Open Problem~(4) of~\cite{KKKKK26} at codimension two across \emph{all} odd orders $N\ge 3$. Recall from~\cite[Corollary~4.1(2)]{KKKKK26} that $\Delta(N,N-2)=\sqrt{2/N}$ when $N$ is even, whereas $\Delta(N,N-2)>\sqrt{2/N}$ when $N$ is odd. By deriving exact coefficient-stability identities directly in the unrestricted inverse-row model and localizing a phase-insensitive two-column obstruction, we upgrade that qualitative separation to an explicit uniform relative gap that requires only unitarity and flat entry magnitudes.
+
+\begin{theorem}[Uniform quantitative spectral gap at odd codimension two]
+\label{thm:odd-codim2}
+Put
+\begin{equation}
+\label{eq:g-def}
+g = \frac{\sqrt{3}-1}{2}.
+\end{equation}
+Let $N\ge 3$ be any odd integer, and let $F\in\C^{N\times N}$ be any flat unitary matrix, meaning $FF^*=I_N$ and $|F_{jk}|=N^{-1/2}$ for all $j,k$ (in particular $F=F_N$). Then
+\begin{equation}
+\label{eq:codim2-gap}
+\Delta_F(N, N-2)^2
+\ge \frac{2}{N} + \frac{g^2}{\bigl(\sqrt{N} + g\sqrt{N/(N-2)}\bigr)^2}
+\ge \frac{9 - 4\sqrt{3}}{N}.
+\end{equation}
+In particular, since $9-4\sqrt{3}=2.0717967697\ldots>2$, every odd $N\ge 3$ satisfies the uniform relative norm separation
+\begin{equation}
+\label{eq:codim2-ratio}
+\frac{\Delta_F(N,N-2)}{\sqrt{2/N}} \ge \sqrt{\frac{9-4\sqrt{3}}{2}} > 1.01779,
+\end{equation}
+while the squared lower-bound coefficient $2 + g^2/(1 + g/\sqrt{N-2})^2$ of the first inequality in~\eqref{eq:codim2-gap} increases monotonically with $N$ toward $2+g^2 = 3 - \sqrt{3}/2 \approx 2.13397$.
+\end{theorem}
+
+We emphasize two scope boundaries of Theorem~\ref{thm:odd-codim2}. First, its proof uses no compactness or attainment argument and imposes no assumption $\|M-F\|_2<1$, condition-number restriction, or row-regularity hypothesis. Second, it is a quantitative lower bound rather than an exact optimum or asserted optimal constant: at $N=3$, both lower bounds in~\eqref{eq:codim2-gap} coincide at $(9-4\sqrt{3})/3\approx 0.69060$, strictly below the known exact optimum $\Delta(3,1)^2=3/4$.
+
+The rest of the paper is organized as follows. Section~\ref{sec:prime-power} establishes the weighted character-filtration descent and proves Theorem~\ref{thm:prime-power}, including the connected $(8,4)$ example. Section~\ref{sec:erasure} proves the short-overlap $q$-character erasure lemma and deduces Theorem~\ref{thm:mixed-low}. Section~\ref{sec:codim2} develops the two-column obstruction, exact stability identities, and localization step proving Theorem~\ref{thm:odd-codim2}. Section~\ref{sec:prior} situates all three results relative to prior literature and states remaining open problems.
+
+\section{Weighted character-filtration descent at prime powers}
+\label{sec:prime-power}
+
+Throughout this section, fix a prime $p$. We denote by $\mathcal{W}(p,a,d)$ the class of nonempty square matrices $A\in\C^{m\times m}$ ($m\ge 1$) of the form~\eqref{eq:weighted-class} with character level $a\ge 0$, arbitrary labels $x_i,y_j\in\Z/p^a\Z$, integers $k_i\ge 0$, binary support $T\in\{0,1\}^{m\times m}$, and scalar Grams $A^*A=AA^*=dI_m$ ($d>0$). Notice that an original binary Fourier mask of order $N=p^a$ and degree $d>0$ belongs to $\mathcal{W}(p,a,d)$ with $m=p^a$, $x_i=i-1$, $y_j=j-1$, and $k_i=0$ for all $i$ (since $d>0$ makes $D$ invertible, so either Gram identity implies the other).
+
+We first record two immediate properties of any $A\in\mathcal{W}(p,a,d)$. Denoting the column support of row $i$ by $S_i=\{j : T_{ij}=1\}$, the diagonal entries of $AA^*=dI_m$ give
+\begin{equation}
+\label{eq:row-norm}
+p^{k_i}|S_i| = d > 0 \qquad (1\le i\le m),
+\end{equation}
+so every row is nonempty. Moreover, if two \emph{distinct} rows $i\neq\ell$ share the exact same label $x_i=x_\ell$ in $\Z/p^a\Z$, then their row inner product is
+\[
+(AA^*)_{i\ell} = p^{(k_i+k_\ell)/2}\sum_{j=1}^m T_{ij}T_{\ell j} = p^{(k_i+k_\ell)/2}\,|S_i\cap S_\ell| = 0,
+\]
+forcing $S_i\cap S_\ell = \varnothing$. Thus:
+\begin{equation}
+\label{eq:same-label-disjoint}
+\text{Distinct rows with the same label } x\in\Z/p^a\Z \text{ have pairwise disjoint supports.}
+\end{equation}
+In particular, for any column $j$ (or pair of columns $j,\ell$) and any fixed label $x\in\Z/p^a\Z$, at most one row with label $x$ is supported at $j$.
+
+\begin{lemma}[Prime-power cyclotomic fiber equality]
+\label{lem:cyclo-fiber}
+Let $a\ge 1$, $L=p^a$, $n=p^{a-1}$, and let $\zeta_a$ be a primitive $L$-th root of unity. If rational numbers $\beta_0,\ldots,\beta_{L-1}\in\Q$ satisfy
+\[
+\sum_{x=0}^{L-1} \beta_x \zeta_a^{hx} = 0
+\]
+for some integer $h$ with $\gcd(h,p)=1$, then for every $u\in\{0,\ldots,n-1\}$,
+\begin{equation}
+\label{eq:fiber-eq}
+\beta_u = \beta_{u+n} = \cdots = \beta_{u+(p-1)n}.
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+Since $\gcd(h,p)=1$, $\zeta_a^h$ is a primitive $L$-th root of unity with minimal polynomial $\Phi_L(X)=(X^L-1)/(X^n-1)=\sum_{q=0}^{p-1} X^{qn}$ over $\Q$ (irreducible by Eisenstein's criterion applied to $\Phi_L(X+1)$ at the prime $p$). The polynomial $P(X)=\sum_{x=0}^{L-1}\beta_x X^x\in\Q[X]$ of degree $<L$ vanishes at $\zeta_a^h$, so $P(X)=Q(X)\Phi_L(X)$ for some $Q(X)=\sum_{u=0}^{n-1} c_u X^u\in\Q[X]$ of degree $<n$. Since the monomials $X^{u+qn}$ ($0\le u<n$, $0\le q<p$) are distinct, comparing coefficients gives $\beta_{u+qn}=c_u$ for all $q$, proving~\eqref{eq:fiber-eq}.
+\end{proof}
+
+Assume now that $a\ge 1$, $L=p^a$, and $n=L/p=p^{a-1}$, and partition the columns of $A\in\mathcal{W}(p,a,d)$ by their residue $y_j\bmod p$. Call a row $i$ \emph{pure} if all columns in $S_i$ share a single residue modulo $p$, and \emph{mixed} otherwise.
+
+\begin{lemma}[Support-matching and residue-balance lemma]
+\label{lem:matching}
+Let $A\in\mathcal{W}(p,a,d)$ with $a\ge 1$. Every mixed row $i$ belongs to a unique $p$-tuple of rows $(i_0,\ldots,i_{p-1})$ such that, for a unique $u\in\{0,\ldots,n-1\}$, a common support $S\subseteq\{1,\ldots,m\}$, and a common exponent $k\ge 0$:
+\begin{enumerate}[label=(\roman*),leftmargin=2em]
+\item row $i_q$ has label $x_{i_q}\equiv u+qn\pmod L$, support $S_{i_q}=S$, and weight exponent $k_{i_q}=k$ for every $0\le q<p$;
+\item distinct such $p$-tuples are pairwise disjoint sets of rows; and
+\item the common support $S$ contains the same positive number $b_0>0$ of columns in each residue class $t\in\Z/p\Z$ (in particular $|S|=pb_0$).
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+Let $i$ be a mixed row. Because $i$ is mixed, $S_i$ contains two anchor columns $j_0,j_1$ with $y_{j_0}\not\equiv y_{j_1}\pmod p$. For \emph{any} pair of columns $j,\ell$ with $y_\ell - y_j \not\equiv 0\pmod p$, the column Gram entry $(A^*A)_{j\ell}=0$ reads
+\[
+0 = \sum_{r=1}^m p^{k_r} T_{rj}T_{r\ell}\zeta_a^{x_r(y_\ell - y_j)}
+= \sum_{x=0}^{L-1} \beta_x \zeta_a^{(y_\ell - y_j)x},
+\qquad \beta_x := \sum_{r:\,x_r=x} p^{k_r} T_{rj}T_{r\ell}.
+\]
+Because $p\nmid (y_\ell-y_j)$, Lemma~\ref{lem:cyclo-fiber} forces $\beta_{u+qn}$ to be independent of $q\in\{0,\ldots,p-1\}$ for each $u<n$. Crucially, by the same-label disjointness~\eqref{eq:same-label-disjoint}, at most one row $r$ with label $x$ can satisfy $T_{rj}T_{r\ell}=1$, so each $\beta_x$ is either $0$ or the single row weight $p^{k_r}$ of the unique row at label $x$ containing both $j$ and $\ell$. Consequently, whenever a row of label $x$ contains both $j$ and $\ell$, every sibling label $x'\equiv x\pmod n$ has a unique row containing both $j$ and $\ell$, and all $p$ of these rows carry the exact same weight $p^{k_r}$.
+
+Applying this to the anchor pair $(j_0,j_1)$ yields, for each $0\le q<p$ (writing $x_i\equiv u+q_0 n\pmod L$ with $0\le u<n$), a unique row $i_q$ of label $u+qn$ containing both $j_0$ and $j_1$, with $k_{i_q}=k_i$ and $i_{q_0}=i$. Now let $j\in S_i$ be arbitrary. Since $y_{j_0}\not\equiv y_{j_1}\pmod p$, at least one anchor $j_*\in\{j_0,j_1\}$ satisfies $y_j\not\equiv y_{j_*}\pmod p$. Applying the pair argument to $(j,j_*)$ produces a row $r$ of label $u+qn$ containing both $j$ and $j_*$. Since $i_q$ already has label $u+qn$ and contains $j_*$, same-label disjointness~\eqref{eq:same-label-disjoint} forces $r=i_q$, so $j\in S_{i_q}$. Thus $S_i\subseteq S_{i_q}$. Applying the identical argument in reverse from any $\ell\in S_{i_q}$ back to label $x_i$ yields $S_{i_q}\subseteq S_i$. Hence $S_{i_q}=S_i=:S$ and $k_{i_q}=k_i=:k$ for all $q$. Uniqueness of the row at each label containing $j_0$ guarantees that distinct $p$-tuples are disjoint.
+
+Finally, let $b_t=|\{j\in S : y_j\equiv t\pmod p\}|$ for $t\in\Z/p\Z$, and set $\omega=\zeta_a^n$, a primitive $p$-th root of unity. Orthogonality of $i_1$ and $i_0$ (labels differing by $n$) yields
+\[
+0 = (AA^*)_{i_1 i_0} = p^k\sum_{j\in S}\zeta_a^{ny_j} = p^k\sum_{t=0}^{p-1} b_t \omega^t.
+\]
+By Lemma~\ref{lem:cyclo-fiber} at level $1$, $b_0=b_1=\cdots=b_{p-1}$. Since $S$ is nonempty by~\eqref{eq:row-norm}, $b_0>0$, completing the proof.
+\end{proof}
+
+\begin{remark}[Indispensability of both Gram identities]
+\label{rem:both-grams}
+Both $A^*A=dI$ and $AA^*=dI$ are essential in Lemma~\ref{lem:matching}: the rectangular $3\times 2$ matrix with rows $(\sqrt{2},\sqrt{2})$, $(1,-1)$, $(1,-1)$ (character level $a=1$, $p=2$, labels $x=(0,1,1)$, $y=(0,1)$, exponents $k=(1,0,0)$) satisfies $A^*A=4I_2$ with balanced aggregated coefficients $\beta_0=\beta_1=2$, yet its weight-$2$ row has no equal-weight sibling because $AA^*\neq 4I_3$ and the two rows of label $1$ share support.
+\end{remark}
+
+\begin{proposition}[Weighted character-filtration descent]
+\label{prop:descent}
+Let $A\in\mathcal{W}(p,a,d)$ with $a\ge 1$. Then there exist a unitary matrix $U\in\C^{m\times m}$ and permutation matrices $\Pi_1,\Pi_2$ such that $\Pi_1 U A \Pi_2 = \bigoplus_{t\in\mathcal{T}} B_t$ is a nonempty direct sum of square matrices $B_t\in\mathcal{W}(p,a-1,d)$, each of size $m_t\ge 1$ with $\sum_{t\in\mathcal{T}} m_t = m$, and every row weight exponent of every $B_t$ equals either $k_i$ (for a pure row $i$ of $A$) or $k+1$ (for a matched mixed $p$-tuple of exponent $k$ in $A$).
+\end{proposition}
+
+\begin{proof}
+Let $L=p^a$, $n=p^{a-1}$, and $\omega=\zeta_a^n$. Partition the rows of $A$ into pure rows and the disjoint matched mixed $p$-tuples of Lemma~\ref{lem:matching}. Leave each pure row unchanged. On each matched $p$-tuple $(i_0,\ldots,i_{p-1})$ (common support $S$, common exponent $k$, labels $u+qn$), whose entries are $p^{k/2}T_j \zeta_a^{uy_j}\omega^{qy_j}$, apply the unitary $p$-point Fourier transform $V_{tq}=p^{-1/2}\omega^{-tq}$ ($0\le t,q<p$). Because $\sum_{q=0}^{p-1}\omega^{q(y_j-t)}=p\,\mathbf{1}_{y_j\equiv t\pmod p}$, the $t$-th transformed row has entries
+\begin{equation}
+\label{eq:transformed-row}
+\widetilde{A}_{t,j} = p^{(k+1)/2}\,T_j\,\zeta_a^{uy_j}\,\mathbf{1}_{y_j\equiv t\pmod p}.
+\end{equation}
+By Lemma~\ref{lem:matching}(iii), this row has $b_0>0$ nonzero entries, all lying in the single column residue class $y_j\equiv t\pmod p$. Let $U_0$ be the block-diagonal unitary matrix performing these disjoint $p$-point transforms and the identity on pure rows; then $A_1:=U_0 A$ satisfies $A_1A_1^*=A_1^*A_1=dI_m$, and every row of $A_1$ is supported within a single column residue class $t\in\Z/p\Z$.
+
+Permute rows and columns of $A_1$ by residue class $t\in\{0,\ldots,p-1\}$ so that $\Pi_1 A_1 \Pi_2 = \bigoplus_{t=0}^{p-1} \widetilde{B}_t$, where $\widetilde{B}_t$ has size $r_t\times c_t$. Since both Grams of $\Pi_1 A_1 \Pi_2$ equal $dI_m$, each block satisfies $\widetilde{B}_t \widetilde{B}_t^* = dI_{r_t}$ and $\widetilde{B}_t^* \widetilde{B}_t = dI_{c_t}$. Because $d>0$, the first identity gives $\rank(\widetilde{B}_t)=r_t\le c_t$ and the second gives $\rank(\widetilde{B}_t)=c_t\le r_t$, forcing $r_t=c_t=:m_t$. Discard any empty blocks ($m_t=0$); since $\sum_t m_t=m\ge 1$, the nonempty index set $\mathcal{T}=\{t:m_t\ge 1\}$ is nonempty.
+
+For each $t\in\mathcal{T}$, write each column label in block $t$ as $y_j=t+py'_j$ with $0\le y'_j<n$. Every row of $\widetilde{B}_t$ has entries of the form $p^{k'/2}T'_j\zeta_a^{x'(t+py'_j)} = \zeta_a^{x't}\cdot p^{k'/2}T'_j (\zeta_a^p)^{(x'\bmod n)y'_j}$, where $(x',k')=(x_i,k_i)$ for a pure row and $(x',k')=(u,k+1)$ for a transformed row~\eqref{eq:transformed-row}. Multiplying each row by the diagonal unit scalar $\zeta_a^{-x't}$ (absorbing this diagonal unitary into $U$) produces $B_t\in\mathcal{W}(p,a-1,d)$ with primitive root $\zeta_{a-1}=\zeta_a^p$, binary support, and weight exponents $k'\in\{k_i,k+1\}$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:prime-power}]
+Apply Proposition~\ref{prop:descent} inductively $a$ times to obtain a nonempty collection of square matrices in $\mathcal{W}(p,0,d)$, each row exponent having increased by at most $1$ per level and hence bounded above by $K+a$, where $K=\max_i k_i$. Pick any terminal square matrix $B\in\mathcal{W}(p,0,d)$ of size $m'\ge 1$. At character level $0$, $\zeta_1=1$, so every entry $B_{ij}=p^{k'_i/2}T'_{ij}$ is nonnegative real. Distinct rows of $B$ are orthogonal and therefore have pairwise disjoint nonempty supports in $\{1,\ldots,m'\}$. Since there are $m'$ disjoint nonempty subsets of an $m'$-element set, every row support is a singleton ($|S'_i|=1$). Equation~\eqref{eq:row-norm} then gives $d=p^{k'_i}$ with $0\le k'_i\le K+a$.
+
+For an unweighted binary Fourier mask of order $N=p^a$ ($a\ge 1$) and degree $1\le d\le p^a$, all initial exponents are $k_i=0$ ($K=0$), forcing $d=p^b$ with $0\le b\le a$. Conversely, every divisor $d=p^b$ ($0\le b\le a$) is realized by the divisor-block mask of~\cite[Section~2.1]{KKKKK26}. The inverse-row equivalence for $1\le d<p^a$ follows directly from~\cite[Theorem~1.1]{KKKKK26}.
+\end{proof}
+
+\begin{example}[Connected $(N,d)=(8,4)$ mask and unequal descent weights]
+\label{ex:connected84}
+At $N=2^3=8$ and $d=4$, consider the $8\times 8$ binary matrix
+\[
+R_{(8,4)} = \begin{pmatrix}
+0&0&1&1&0&0&1&1\\
+0&1&0&1&0&1&0&1\\
+1&1&0&0&1&1&0&0\\
+1&0&1&0&1&0&1&0\\
+0&0&1&1&0&0&1&1\\
+1&0&1&0&1&0&1&0\\
+1&1&0&0&1&1&0&0\\
+0&1&0&1&0&1&0&1
+\end{pmatrix}.
+\]
+With $\zeta_8=e^{2\pi i/8}$, $D_{rc}=(R_{(8,4)})_{rc}\zeta_8^{rc}$ satisfies $DD^*=D^*D=4I_8$. Yet the bipartite support graph of $R_{(8,4)}$ is a single connected component on all $16$ vertices, so $R_{(8,4)}$ does \emph{not} split into disjoint $4\times 4$ blocks. Under Proposition~\ref{prop:descent} at level $a=3$, rows $\{0,4\}$ and $\{2,6\}$ are matched mixed pairs (labels $0,4$ and $2,6$ modulo $8$) while rows $1,3,5,7$ are pure (supported exclusively on odd or even columns). After one $2$-point row Fourier step, the matrix splits into two $4\times 4$ blocks in $\mathcal{W}(2,2,4)$ with \emph{unequal} row exponents $(1,1,0,0)$ and $(1,0,1,0)$ and repeated labels. Two further descent levels terminate in $\mathcal{W}(2,0,4)$ with every row exponent equal to $2$, confirming $d=2^2=4$. This demonstrates concretely why both unequal weights and repeated labels in Theorem~\ref{thm:prime-power} are indispensable.
+\end{example}
+
+\section{Short-overlap $q$-character erasure and mixed prime-power orders}
+\label{sec:erasure}
+
+Let $m\ge 1$ and let $q$ be a prime with $\gcd(m,q)=1$, and set $N=mq$. Let $e_m = q(q^{-1}\bmod m)$ and $e_q = m(m^{-1}\bmod q)$ be the complementary Chinese remainder idempotents in $\Z/N\Z$, satisfying $e_m+e_q\equiv 1$, $e_m e_q\equiv 0$, $e_m^2\equiv e_m$, and $e_q^2\equiv e_q\pmod N$. Writing indices in CRT coordinates $r\equiv x e_m + b e_q$ and $c\equiv y e_m + v e_q\pmod N$ ($x,y\in\Z/m\Z$, $b,v\in\Z/q\Z$) yields the exact phase factorization
+\begin{equation}
+\label{eq:crt-mq}
+\zeta_N^{rc} = \alpha^{xy}\beta^{bv},\qquad \alpha=\zeta_N^{e_m},\quad \beta=\zeta_N^{e_q},
+\end{equation}
+where $\alpha$ is a primitive $m$-th root of unity and $\beta$ is a primitive $q$-th root of unity.
+
+\begin{lemma}[Short-overlap $q$-character erasure]
+\label{lem:erasure}
+Let $q$ be prime, let $m\ge 1$ satisfy $\gcd(m,q)=1$, and set $N=mq$. Suppose $R\in\{0,1\}^{N\times N}$ is an orthogonal binary Fourier mask of order $N$ and degree $0<d<q$, so that $D_{rc}=R_{rc}\zeta_N^{rc}$ satisfies $D^*D=DD^*=dI_N$. Define the $q$-erased square matrix $E\in\C^{N\times N}$ with the same binary support and size by
+\begin{equation}
+\label{eq:erased-def}
+E_{(x,b),(y,v)} = R_{(x,b),(y,v)}\,\alpha^{xy},\qquad (x,b),(y,v)\in(\Z/m\Z)\times(\Z/q\Z).
+\end{equation}
+Then $E^*E = EE^* = dI_N$.
+\end{lemma}
+
+\begin{proof}
+Set $K=\Q(\alpha)$. Because $e_m+e_q\equiv 1\pmod N$, we have $\alpha\beta=\zeta_N$, so $K(\beta)=\Q(\zeta_N)$. Since $\gcd(m,q)=1$, Euler's totient is multiplicative and
+\[
+[K(\beta):K] = \frac{[\Q(\zeta_N):\Q]}{[\Q(\alpha):\Q]} = \frac{\varphi(mq)}{\varphi(m)} = \varphi(q) = q-1.
+\]
+Hence for every nonzero $h\in(\Z/q\Z)^\times$, the minimal polynomial of $\beta^h$ over $K$ is $\Phi_q(X)=\sum_{b=0}^{q-1} X^b$.
+
+Consider any two distinct columns $c=(y,v)$ and $c'=(y',v')$.
+\begin{itemize}[leftmargin=1.5em]
+\item If $v=v'$, then $\beta^{b(v'-v)}=1$ for all $b$, so $(E^*E)_{cc'}=(D^*D)_{cc'}=0$.
+\item If $v\neq v'$, group the column Gram entry $(D^*D)_{cc'}=0$ by the row's $q$-coordinate $b\in\Z/q\Z$:
+\[
+0 = (D^*D)_{cc'} = \sum_{b=0}^{q-1} C_b\,(\beta^{v'-v})^b,
+\qquad C_b := \sum_{x\in\Z/m\Z} R_{(x,b),c} R_{(x,b),c'}\,\alpha^{x(y'-y)} \in K.
+\]
+Because the polynomial $\sum_{b=0}^{q-1} C_b X^b\in K[X]$ has degree $\le q-1$ and vanishes at $\beta^{v'-v}$ whose minimal polynomial over $K$ is $\Phi_q(X)$, it must be a $K$-scalar multiple of $\Phi_q(X)$; therefore
+\begin{equation}
+\label{eq:Cb-equal}
+C_0 = C_1 = \cdots = C_{q-1}.
+\end{equation}
+On the other hand, each column of $R$ contains exactly $d$ ones, so the column support overlap $\{r : R_{rc}=R_{rc'}=1\}$ has cardinality at most $d<q$. Consequently, at least one residue $b_0\in\Z/q\Z$ is omitted from this overlap, giving $C_{b_0}=0$. By~\eqref{eq:Cb-equal}, $C_b=0$ for every $b\in\Z/q\Z$, and hence
+\[
+(E^*E)_{cc'} = \sum_{b=0}^{q-1} C_b = 0.
+\]
+\end{itemize}
+Since erasing unit-modulus factors preserves every diagonal entry $(E^*E)_{cc}=d$, we obtain $E^*E=dI_N$. Because $E$ is square and $d>0$, $E$ is invertible and therefore $EE^*=dI_N$ as well.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:mixed-low}]
+The degree $d=0$ is realized uniquely by $R=0$. Assume $0<d<q$ and let $R$ be an orthogonal binary Fourier mask of order $N=p^a q$ and degree $d$. Applying Lemma~\ref{lem:erasure} with $m=p^a$ produces a square $N\times N$ matrix $E$ with $E^*E=EE^*=dI_N$ and entries $E_{(x,b),(y,v)}=R_{(x,b),(y,v)}\alpha^{xy}$ where $\alpha$ has exact order $p^a$. Thus $E\in\mathcal{W}(p,a,d)$ with matrix dimension $N=p^a q$, $q$-fold repeated row and column labels modulo $p^a$, and all initial weight exponents $k_i=0$. By Theorem~\ref{thm:prime-power}, $d=p^j$ for some $0\le j\le a$ (and $p^j<q$ by hypothesis).
+
+Conversely, every $d=p^j$ with $0\le j\le a$ divides $N=p^a q$ and is realized by the divisor-block mask of~\cite[Section~2.1]{KKKKK26}. Finally, for $0<d<q$ and $s=N-d\in\{1,\ldots,N-1\}$, the sharpness equivalence and strict separation for $\Delta(N,N-d)$ follow immediately from~\cite[Theorem~1.1]{KKKKK26}.
+\end{proof}
+
+\begin{remark}[Sharpness of the $d<q$ erasure guard and small mixed orders]
+\label{rem:boundary-guard}
+The strict inequality $d<q$ in Lemma~\ref{lem:erasure} is sharp for the character-erasure mechanism itself. At the boundary $d=q$, the divisor-block mask of order $N=p^a q$ satisfies $D^*D=DD^*=qI_N$, yet its erased matrix $E$ fails orthogonality (because column overlaps of size $q$ hit all $q$ fibers $b\in\Z/q\Z$ with equal nonzero $C_b\neq 0$). For instance, at $N=12=2^2\cdot 3$ and $d=3$, two distinct columns in the same divisor block have $C_0=C_1=C_2=1$, giving $(D^*D)_{cc'}=1+\beta+\beta^2=0$ while $(E^*E)_{cc'}=3\neq 0$.
+
+Table~\ref{tab:mixed-degrees} illustrates Theorem~\ref{thm:mixed-low} across the smallest mixed prime-power orders $N=p^a q$, including the dichotomy $q<p^2$ versus $q>p^2$ at $a=2$.
+\end{remark}
+
+\begin{table}[ht]
+\centering
+\caption{Exact allowed orthogonal Fourier mask degrees $0\le d<q$ at small mixed prime-power orders $N=p^a q$ (Theorem~\ref{thm:mixed-low}), together with the divisor boundary $d=q$.}
+\label{tab:mixed-degrees}
+\begin{tabular}{rrlll}
+\toprule
+$N=p^a q$ & $(p,a,q)$ & Allowed $0\le d<q$ & Excluded $0<d<q$ & Boundary $d=q$ \\
+\midrule
+$12$ & $(2,2,3)$ & $\{0,1,2\}$ & $\varnothing$ & $3$ (exists) \\
+$20$ & $(2,2,5)$ & $\{0,1,2,4\}$ & $\{3\}$ & $5$ (exists) \\
+$40$ & $(2,3,5)$ & $\{0,1,2,4\}$ & $\{3\}$ & $5$ (exists) \\
+$45$ & $(3,2,5)$ & $\{0,1,3\}$ & $\{2,4\}$ & $5$ (exists) \\
+$56$ & $(2,3,7)$ & $\{0,1,2,4\}$ & $\{3,5,6\}$ & $7$ (exists) \\
+$63$ & $(3,2,7)$ & $\{0,1,3\}$ & $\{2,4,5,6\}$ & $7$ (exists) \\
+$99$ & $(3,2,11)$ & $\{0,1,3,9\}$ & $\{2,4,5,6,7,8,10\}$ & $11$ (exists) \\
+$175$ & $(5,2,7)$ & $\{0,1,5\}$ & $\{2,3,4,6\}$ & $7$ (exists) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Quantitative odd codimension-two spectral gap}
+\label{sec:codim2}
+
+We now prove Theorem~\ref{thm:odd-codim2}. Throughout this section, let $N\ge 3$ be odd and let $F\in\C^{N\times N}$ be any flat unitary matrix: $FF^*=I_N$ and $|F_{jk}|=N^{-1/2}$ for all $1\le j,k\le N$.
+
+\subsection{Phase-insensitive two-column obstruction}
+
+\begin{lemma}[Two-column obstruction without row regularity]
+\label{lem:two-col}
+Let $N\ge 3$ be odd, and let $C\in\C^{N\times N}$ be any matrix whose every column $C_i$ has support $T_i\subseteq\{1,\ldots,N\}$ of cardinality exactly $|T_i|=2$, with every nonzero entry satisfying $|C_{ri}|=N^{-1/2}$. (No row-degree regularity or phase relation is assumed.) Then there exists a pair of distinct column indices $i\neq j$ satisfying one of the following two alternatives:
+\begin{enumerate}[label=(\Roman*),leftmargin=2.4em]
+\item $|T_i\cap T_j|=1$, in which case $|(C^*C)_{ij}| = 1/N$; or
+\item $T_i = T_j$, in which case $|(C^*C)_{ij}| \ge 1/N$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+Suppose first that some pair of columns $i\neq j$ has $|T_i\cap T_j|=1$, say $T_i\cap T_j=\{r\}$. Then $(C^*C)_{ij} = \overline{C_{ri}}C_{rj}$ has a single nonzero term of modulus $N^{-1/2}\cdot N^{-1/2}=1/N$, giving Alternative~(I).
+
+Otherwise, no two column supports intersect in a single element, so distinct $2$-element supports among $\{T_1,\ldots,T_N\}$ are pairwise disjoint. Let $r$ be the number of distinct supports. Disjointness gives $2r\le N$; since $N$ is odd, $2r\le N-1$, hence $2r<N$. By pigeonhole, distributing $N$ columns among $r$ supports forces at least three distinct columns $i_1,i_2,i_3$ to share a common $2$-element support $T$.
+
+Let $G\in\C^{3\times 3}$ be the Gram matrix of the three columns $C_{i_1},C_{i_2},C_{i_3}$. Since all three columns are supported on the same $2$ coordinates, $G$ is positive semidefinite of rank at most $2$, with diagonal entries $G_{aa}=2/N$ and trace $\tr(G)=6/N$. Let $\lambda_1,\lambda_2\ge 0$ be its (at most two) nonzero eigenvalues. By Cauchy--Schwarz,
+\[
+\tr(G^2) = \lambda_1^2 + \lambda_2^2 \ge \frac{(\lambda_1+\lambda_2)^2}{2} = \frac{(\tr G)^2}{2} = \frac{18}{N^2}.
+\]
+The diagonal entries of $G$ contribute $3\cdot(2/N)^2 = 12/N^2$ to $\tr(G^2) = \sum_{a,b}|G_{ab}|^2$. Hence the six ordered off-diagonal entries satisfy
+\[
+\sum_{1\le a\neq b\le 3} |G_{ab}|^2 = \tr(G^2) - \frac{12}{N^2} \ge \frac{6}{N^2},
+\]
+so at least one off-diagonal entry satisfies $|G_{ab}|\ge 1/N$, giving Alternative~(II).
+\end{proof}
+
+Note that Alternative~(II) is a rescaling of the first Welch bound~\cite{Wel74,DHC12} for three unit vectors $x_a = \sqrt{N/2}\,C_{i_a}$ in $\C^2$, while the underlying support dichotomy reflects Severini's unitary quadrangularity obstruction~\cite{Sev03}. Separating Alternatives~(I) and~(II) is critical for the localization step below: the coefficient-error cross terms see $1$ coordinate in Alternative~(I) and $0$ coordinates in Alternative~(II).
+
+\subsection{Exact unrestricted-model stability identities}
+
+Fix any admissible $M\in\GL_N(\C)$ such that every row of $B:=M^{-1}$ has at most $N-2$ nonzeros, and set
+\begin{equation}
+\label{eq:params-codim2}
+E = M - F,\qquad \rho = \|E\|_2,\qquad q = \frac{N-2}{N},\qquad a^2 = \frac{2}{N} = 1 - q,\qquad \varepsilon = \rho^2 - a^2.
+\end{equation}
+For each $1\le i\le N$, let $b_i\in\C^{1\times N}$ be the $i$-th row of $B$ (with $x_i := \|b_i\|_2 > 0$ since $B$ is invertible). Pad the actual support of $b_i$ (which has size $\le N-2$) arbitrarily to a subset $S_i\subseteq\{1,\ldots,N\}$ of cardinality \emph{exactly} $|S_i|=N-2$, without modifying any entry of $B$. Define $A,C,Y,H\in\C^{N\times N}$ by
+\begin{equation}
+\label{eq:ACYH-def}
+A_{ji} = F_{ji}\,\mathbf{1}_{j\in S_i},\qquad
+C = F - A,\qquad
+Y = qB - A^*,\qquad
+H = \rho^2 I_N - EE^*.
+\end{equation}
+Observe the index orientation: row $i$ of $B$ and row $i$ of $A^*$ are both supported in $S_i$, so row $Y_i$ of $Y$ is supported in $S_i$ and vanishes identically on the $2$-element complement $T_i := \{1,\ldots,N\}\setminus S_i$, which is precisely the support of column $C_i$ of $C$. (On padded coordinates in $S_i$ where $(b_i)_j=0$, $(Y_i)_j = -\overline{F_{ji}}$ need not vanish, and is kept exactly in all identities below.)
+
+\begin{lemma}[Exact stability identities and row-norm control]
+\label{lem:stability}
+With notation~\eqref{eq:params-codim2}--\eqref{eq:ACYH-def}, set $P := q\varepsilon BB^*$, $Q := qBHB^* + YY^*$, and $K := C^*C - a^2 I_N$. Then:
+\begin{enumerate}[label=(\alph*),leftmargin=2em]
+\item For every $1\le i\le N$, writing $z_i = (b_i F)_i = \sum_{j\in S_i}(b_i)_j F_{ji}$,
+\begin{equation}
+\label{eq:row-stab}
+q\,b_i H b_i^* + \|Y_i\|_2^2 = q\varepsilon x_i^2.
+\end{equation}
+\item We have $\varepsilon\ge 0$, so both $P$ and $Q$ are positive semidefinite with identical diagonal entries $P_{ii}=Q_{ii}=q\varepsilon x_i^2$. Consequently, for all $1\le i,j\le N$,
+\begin{equation}
+\label{eq:PQ-Y-bounds}
+|(P-Q)_{ij}| \le 2q\varepsilon x_i x_j,\qquad \|Y_i\|_2 \le \sqrt{q\varepsilon}\,x_i.
+\end{equation}
+\item The exact matrix identity
+\begin{equation}
+\label{eq:K-identity}
+K = P - Q + YC + C^*Y^*
+\end{equation}
+holds.
+\item Whenever $\varepsilon < q$, every row norm satisfies
+\begin{equation}
+\label{eq:xi-bound}
+x_i \le \frac{1}{\sqrt{q}-\sqrt{\varepsilon}},
+\end{equation}
+and setting $u := \sqrt{q\varepsilon}/(\sqrt{q}-\sqrt{\varepsilon})$ yields $|(P-Q)_{ij}|\le 2u^2$ and $\|Y_i\|_2\le u$ for all $i,j$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(a) Using $b_i E = e_i^T - b_i F$ and $FF^*=I_N$, we compute
+\begin{align*}
+b_i H b_i^*
+&= \rho^2 x_i^2 - \|e_i^T - b_i F\|_2^2
+= \rho^2 x_i^2 - \bigl(1 + x_i^2 - 2\operatorname{Re}(z_i)\bigr)
+= 2\operatorname{Re}(z_i) - 1 - (q - \varepsilon)x_i^2,
+\end{align*}
+since $\rho^2 - 1 = a^2 + \varepsilon - 1 = \varepsilon - q$. Meanwhile, because $b_i$ is supported in $S_i$ and the $i$-th row of $A^*$ has entries $\overline{F_{ji}}\mathbf{1}_{j\in S_i}$ of squared norm $|S_i|/N = q$, we have
+\[
+\|Y_i\|_2^2 = \|q b_i - (A^*)_i\|_2^2 = q^2 x_i^2 + q - 2q\operatorname{Re}(z_i).
+\]
+Multiplying the first identity by $q$ and adding the second cancels $2q\operatorname{Re}(z_i)$ and $q$ identically, giving~\eqref{eq:row-stab}.
+
+(b) Because $H=\rho^2 I_N - EE^* \succeq 0$, the left-hand side of~\eqref{eq:row-stab} is nonnegative and $q>0$, $x_i>0$, which already proves $\varepsilon\ge 0$. (Alternatively, Cauchy--Schwarz on $S_i$ gives $\operatorname{Re}(z_i)\le \sqrt{q}\,x_i$, whence
+\begin{equation}
+\label{eq:one-row-cs}
+\rho^2 \ge \frac{\|b_i E\|_2^2}{x_i^2}
+= 1 + \frac{1}{x_i^2} - \frac{2\operatorname{Re}(z_i)}{x_i^2}
+\ge a^2 + \left(\frac{1}{x_i} - \sqrt{q}\right)^2,
+\end{equation}
+directly yielding $\varepsilon\ge 0$.) Thus $P\succeq 0$ and $Q\succeq 0$, and~\eqref{eq:row-stab} states precisely $Q_{ii} = q\,b_i H b_i^* + \|Y_i\|_2^2 = q\varepsilon x_i^2 = P_{ii}$. Positive-semidefinite Cauchy--Schwarz gives $|P_{ij}|\le\sqrt{P_{ii}P_{jj}}=q\varepsilon x_i x_j$ and $|Q_{ij}|\le\sqrt{Q_{ii}Q_{jj}}=q\varepsilon x_i x_j$, so $|(P-Q)_{ij}|\le 2q\varepsilon x_i x_j$; dropping $q b_i H b_i^*\ge 0$ from~\eqref{eq:row-stab} gives $\|Y_i\|_2\le\sqrt{q\varepsilon}\,x_i$.
+
+(c) Using $BE=I_N-BF$, $FF^*=I_N$, and $\rho^2-\varepsilon = a^2 = 1-q$, we expand
+\begin{align*}
+P - Q
+&= q\varepsilon BB^* - q\rho^2 BB^* + q(I_N - BF)(I_N - F^*B^*) - YY^* \\
+&= qI_N - qBF - qF^*B^* + q^2 BB^* - YY^*.
+\end{align*}
+Now substitute $qB = A^* + Y$ and $F = A + C$ into $q^2 BB^* - YY^* = A^*A + A^*Y^* + YA$ and $-qBF - qF^*B^* = -A^*F - F^*A - YF - F^*Y^*$:
+\begin{align*}
+P - Q
+&= qI_N + A^*A - A^*F - F^*A + Y(A - F) + (A^* - F^*)Y^* \\
+&= (q - 1)I_N + (F - A)^*(F - A) - YC - C^*Y^* \\
+&= C^*C - a^2 I_N - YC - C^*Y^*,
+\end{align*}
+where we used $F^*F = I_N$ and $1-q = a^2$. Rearranging gives~\eqref{eq:K-identity}.
+
+(d) From~\eqref{eq:one-row-cs}, $(x_i^{-1}-\sqrt{q})^2 \le \varepsilon$, so $x_i^{-1}\ge \sqrt{q}-\sqrt{\varepsilon}$. When $\varepsilon<q$, the right-hand side is strictly positive, yielding~\eqref{eq:xi-bound}; substituting into~\eqref{eq:PQ-Y-bounds} gives $|(P-Q)_{ij}|\le 2u^2$ and $\|Y_i\|_2\le u$.
+\end{proof}
+
+\subsection{Localization and proof of Theorem~\ref{thm:odd-codim2}}
+
+\begin{proof}[Proof of Theorem~\ref{thm:odd-codim2}]
+Fix any admissible $M\in\GL_N(\C)$ with at most $N-2$ nonzeros per row of $B=M^{-1}$, and retain the notation of Lemma~\ref{lem:stability}. Consider two cases depending on whether $\varepsilon < q$ or $\varepsilon \ge q$.
+
+\smallskip
+\noindent\emph{Branch 1: $\varepsilon < q$.}
+Apply Lemma~\ref{lem:two-col} to the padded complementary matrix $C=F-A$ (each column $C_i$ has support $T_i$ of size $2$ and entry moduli $N^{-1/2}$), obtaining distinct column indices $i\neq j$ with $|K_{ij}| = |(C^*C)_{ij}| \ge 1/N$. Set $u=\sqrt{q\varepsilon}/(\sqrt{q}-\sqrt{\varepsilon})$ and $v=\sqrt{N}\,u\ge 0$.
+\begin{itemize}[leftmargin=1.5em]
+\item In Alternative~(I) ($|T_i\cap T_j|=1$), row $Y_i$ vanishes on $T_i$, so the inner product $(YC)_{ij} = \sum_{r\in T_j}(Y_i)_r C_{rj}$ receives a nonzero contribution from at most the \emph{single} coordinate $r_0\in T_j\setminus T_i$. Therefore
+\[
+|(YC)_{ij}| = |(Y_i)_{r_0}|\,|C_{r_0 j}| \le \frac{\|Y_i\|_2}{\sqrt{N}} \le \frac{u}{\sqrt{N}},
+\]
+and symmetrically $|(C^*Y^*)_{ij}| = |(YC)_{ji}| \le u/\sqrt{N}$. By~\eqref{eq:K-identity} and Lemma~\ref{lem:stability}(d),
+\[
+\frac{1}{N} \le |K_{ij}| \le |(P-Q)_{ij}| + |(YC)_{ij}| + |(C^*Y^*)_{ij}| \le 2u^2 + \frac{2u}{\sqrt{N}}.
+\]
+Multiplying by $N$ gives $2v^2 + 2v - 1 \ge 0$; since $v\ge 0$, this forces $v \ge (\sqrt{3}-1)/2 = g$.
+\item In Alternative~(II) ($T_i = T_j$), row $Y_i$ vanishes on $T_i=T_j$ and row $Y_j$ vanishes on $T_j=T_i$, so \emph{both} cross terms vanish identically: $(YC)_{ij} = (C^*Y^*)_{ij} = 0$. Equation~\eqref{eq:K-identity} then gives
+\[
+\frac{1}{N} \le |K_{ij}| = |(P-Q)_{ij}| \le 2u^2,
+\]
+whence $v \ge 1/\sqrt{2} > (\sqrt{3}-1)/2 = g$ (since $1/2 > (2-\sqrt{3})/2$).
+\end{itemize}
+Thus $v \ge g$ in both alternatives. Substituting $v = \sqrt{N}\sqrt{q\varepsilon}/(\sqrt{q}-\sqrt{\varepsilon})$ and rearranging gives
+\begin{equation}
+\label{eq:sqrt-eps}
+\sqrt{\varepsilon} \ge \frac{g}{\sqrt{N} + g/\sqrt{q}} = \frac{g}{\sqrt{N} + g\sqrt{N/(N-2)}}.
+\end{equation}
+
+\smallskip
+\noindent\emph{Branch 2: $\varepsilon \ge q$.}
+Since $N\ge 3$, we have $\sqrt{N-2}=\sqrt{Nq}>0$, hence
+\[
+\frac{g}{\sqrt{N} + g/\sqrt{q}} = \frac{g\sqrt{q}}{\sqrt{Nq} + g} < \sqrt{q} \le \sqrt{\varepsilon},
+\]
+so~\eqref{eq:sqrt-eps} holds automatically in this branch as well.
+
+\smallskip
+Squaring~\eqref{eq:sqrt-eps} and adding $a^2=2/N$ gives the first inequality in~\eqref{eq:codim2-gap} for every admissible $M$; taking the infimum over $M$ preserves it without any compactness argument. Finally, for every $N\ge 3$ we have $N-2\ge 1$, so $1/\sqrt{q}=\sqrt{N/(N-2)}\le\sqrt{N}$. Consequently,
+\[
+\frac{g}{\sqrt{N}+g/\sqrt{q}} \ge \frac{g}{\sqrt{N}(1+g)} = \frac{2-\sqrt{3}}{\sqrt{N}},
+\]
+and adding $2/N$ yields
+\[
+\Delta_F(N,N-2)^2 \ge \frac{2 + (2-\sqrt{3})^2}{N} = \frac{9 - 4\sqrt{3}}{N},
+\]
+completing~\eqref{eq:codim2-gap}. Since $9-4\sqrt{3} = 2.0717967697\ldots$, dividing by $2/N$ and taking square roots gives~\eqref{eq:codim2-ratio}. Finally, writing the first bound in~\eqref{eq:codim2-gap} as $\bigl(2 + g^2/(1 + g/\sqrt{N-2})^2\bigr)/N$ shows immediately that its numerator increases monotonically with $N$ toward $2+g^2 = 3-\sqrt{3}/2$.
+\end{proof}
+
+Table~\ref{tab:codim2-bounds} records numerical values of the proved lower bounds from Theorem~\ref{thm:odd-codim2}.
+
+\begin{table}[ht]
+\centering
+\caption{Lower-bound coefficients $c(N) := 2 + g^2/(1 + g/\sqrt{N-2})^2$ in Theorem~\ref{thm:odd-codim2} compared against the uniform floor $9-4\sqrt{3}\approx 2.07180$ and the exact $N=3$ optimum $3\Delta(3,1)^2=9/4=2.25$.}
+\label{tab:codim2-bounds}
+\begin{tabular}{rrrr}
+\toprule
+Odd order $N$ & Sharp lower coeff.\ $c(N)$ & Norm ratio $\sqrt{c(N)/2}$ & $N\Delta(N,N-2)^2$ (known) \\
+\midrule
+$3$ & $2.07180$ ($=9-4\sqrt{3}$) & $1.01779$ & $2.25000$ ($=9/4$) \\
+$5$ & $2.09131$ & $1.02257$ & $>2.09131$ \\
+$7$ & $2.09893$ & $1.02444$ & $>2.09893$ \\
+$11$ & $2.10642$ & $1.02626$ & $>2.10642$ \\
+$21$ & $2.11402$ & $1.02811$ & $>2.11402$ \\
+$101$ & $2.12464$ & $1.03069$ & $>2.12464$ \\
+$\to\infty$ & $2.13397$ ($=3-\sqrt{3}/2$) & $1.03295$ & --- \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Relation to prior work and open problems}
+\label{sec:prior}
+
+We separate our results from closely related classical theorems and neighboring matrix-approximation models, reporting transparently on source access during our literature audit:
+\begin{itemize}[leftmargin=1.5em]
+\item \emph{Direct predecessor~\cite{KKKKK26}:} Our previous paper established the sharp equivalence between $\Delta(N,N-d)=\sqrt{d/N}$ and orthogonal binary Fourier masks, classified all degrees at odd semiprimes $N=pq$, proved block rigidity at prime degrees and weight $3$, and proved qualitative strict separation $\Delta(N,N-2)>\sqrt{2/N}$ for odd $N$. None of its proofs are repeated here. The present paper supplies (i) the weighted character-filtration descent handling non-block-rigid prime-power masks, (ii) the short-overlap $q$-character erasure extending low-degree classification to all $N=p^a q$ ($a\ge 2$), and (iii) the quantitative $O(1/N)$ relative spectral gap resolving Open Problem~(4) of~\cite{KKKKK26} at codimension two for all odd orders.
+\item \emph{Vanishing sums of roots of unity and spectral sets:} The prime-power cyclotomic fiber equality (Lemma~\ref{lem:cyclo-fiber}) and linear disjointness of coprime cyclotomic fields (Lemma~\ref{lem:erasure}) are classical algebraic ingredients (see de Bruijn~\cite{deB53} and Lam--Leung~\cite[Theorems~3.1 and~3.3, Corollary~3.4]{LL00}, inspected in full via \texttt{arXiv:math/9511209}). For Cartesian Hadamard submatrices of $F_N$ (equivalently spectral subsets in $\Z/N\Z$), Malikiosis--Kolountzakis~\cite[Theorems~1.2 and~2.1]{MK17} (inspected in full via \texttt{arXiv:1612.01328}) prove that every spectral set in $\Z/p^n q\Z$ tiles, so its cardinality divides $p^n q$; see also Bond--Glickfield--Herr~\cite{BGH19} (for which only indexed primary excerpts were accessible rather than the full PDF). Because orthogonal binary Fourier masks allow arbitrary row-dependent supports and pair-varying intersections---and need not even be block-decomposable, as Example~\ref{ex:connected84} shows---spectral-set tiling theorems do not directly imply Theorems~\ref{thm:prime-power} or~\ref{thm:mixed-low}.
+\item \emph{Welch bounds and unitary support obstructions:} In Lemma~\ref{lem:two-col}, the equal-support Gram bound (Alternative~(II)) is a rescaling of the first Welch bound~\cite{Wel74} for three unit vectors in $\C^2$, proved via the trace/rank inequality of Datta--Howard--Cochran~\cite[Lemma~2.1 and Theorem~2.2]{DHC12} (inspected in full via \texttt{arXiv:0909.0206}; the original 1974 IEEE full text of~\cite{Wel74} was not directly accessed). The support dichotomy excluding singleton intersections and triple collisions on a $2$-set reflects Severini's quadrangularity and strong-quadrangularity criteria for unitary digraphs~\cite[Definitions~1--2 and Lemma~1]{Sev03} (inspected in full via \texttt{arXiv:math/0205187}). Neither source alone supplies the coefficient-stability transfer (Lemma~\ref{lem:stability}) to the unrestricted inverse-row distance $\Delta_F(N,N-2)$.
+\item \emph{Sparse dual frames and sparse approximate inverses:} Krahmer--Kutyniok--Lemvig~\cite[Eq.~(2.3), Theorem~3.2, and Proposition~3.3]{KKL13} (inspected in full via \texttt{arXiv:1204.5062}) characterize minimal sparsity of duals $\Psi$ ($\Psi\Phi^*=I$) for a \emph{fixed} frame $\Phi$ via generalized spark; setting $\Phi=M^*$ and $\Psi=M^{-1}$ matches the duality relation, but~\cite{KKL13} holds $\Phi$ fixed rather than minimizing $\|\Phi-F^*\|_2$ under a simultaneous every-row budget. In numerical preconditioning, Cosgrove--D\'iaz--Griewank~\cite{CDG92} and Holland--Wathen--Shaw~\cite{HWS05} minimize residuals $\|I - BA\|$ (or $\|T-PA\|$) for sparse $B$ in both Frobenius and consistent operator norms (including the $2$-norm). With $A=F$ and $B=M^{-1}$, the residual $R=I-BF=B(M-F)$ has $\|R\|_2=\|B-F^*\|_2$, whereas $\Delta_F(N,s)$ minimizes $\|M-F\|_2=\|B^{-1}R\|_2$ over invertible $B$ with arbitrary supports. We note transparently that for~\cite{CDG92} and~\cite{HWS05} only publisher abstracts and bibliographic metadata (including SIAM's notice of an appended correction to~\cite{HWS05}) were accessible during preparation, not full theorem texts.
+\end{itemize}
+
+\subsection*{Open problems}
+\begin{enumerate}[label=(\arabic*),leftmargin=2em]
+\item \emph{High degrees $d>q$ at mixed prime powers $N=p^a q$:} Theorem~\ref{thm:mixed-low} classifies all degrees $0\le d<q$ at $N=p^a q$ ($a\ge 2$), while Remark~\ref{rem:boundary-guard} shows that $q$-character erasure breaks at $d=q$. Do all orthogonal binary Fourier masks of order $N=p^a q$ satisfy $d\mid N$ across the entire range $q<d<N$?
+\item \emph{Three-prime and general composite orders:} Extend degree classification to squarefree three-prime orders $N=pqr$ (beginning at $N=105$) and even semiprime multiples $N=2pq$ ($N=30$).
+\item \emph{Exact optimum and optimal constant at odd codimension two:} Determine the exact value of $\Delta(N,N-2)$ for odd $N\ge 5$, and determine the sharp asymptotic constant $\liminf_{\text{odd }N\to\infty} N\Delta(N,N-2)^2$ (currently bracketed below by $3-\sqrt{3}/2\approx 2.13397$).
+\item \emph{Quantitative gaps at higher codimensions:} Establish explicit $O(1/N)$ relative spectral gaps for $\Delta(N,N-d)^2 - d/N$ at non-divisor codimensions $d\ge 3$ (for example, $d=3$ when $3\nmid N$, or excluded prime-power degrees $d\neq p^b$ at $N=p^a$).
+\end{enumerate}
+
+\section*{Data and code availability}
+All verification artifacts are publicly available at
+\begin{center}
+\url{https://github.com/AgentSlop-Si/mixed-prime-power-fourier-masks}
+\end{center}
+and consist of:
+\begin{enumerate}[label=(\arabic*),leftmargin=2em]
+\item A standalone Python verification script (\texttt{verify\_mixed\_prime\_power.py}, standard library only) performing exact cyclotomic-ring verification of weighted prime-power descent (Theorem~\ref{thm:prime-power}) across divisor masks, repeated-label weighted stress tests, the connected $(8,4)$ mask of Example~\ref{ex:connected84} (including its exact $\Q[\zeta_8]$ inverse-row witness), and negative controls; exact CRT and $q$-character erasure verification (Theorem~\ref{thm:mixed-low}, Lemma~\ref{lem:erasure}, and Table~\ref{tab:mixed-degrees}) including shifted-label cross-$q$ overlaps, $d=q$ boundary guard failures, and exhaustive short-subset erasure at $N=12,20$; exhaustive verification of Lemma~\ref{lem:two-col} across all $27$ ($N=3$) and $100{,}000$ ($N=5$) ordered two-entry-per-column support patterns; exact $\Q[\zeta_N]$ verification of the stability identities of Lemma~\ref{lem:stability} at $N=3,5,7$ with padded supports; and numerical verification of Theorem~\ref{thm:odd-codim2} and Table~\ref{tab:codim2-bounds}.
+\item A zero-dependency Lean~4 formal verification file (\texttt{MixedPrimePowerFourierMasks.lean}, verified in Lean~4.36.0 using core \texttt{Init} only, with zero \texttt{sorry}, zero custom axioms, and pure kernel reduction) machine-checking the weighted-descent phase congruences and norm scaling, the exact $\Z[\zeta_8]$ Gram, connectivity, and unequal-weight descent of Example~\ref{ex:connected84}, the CRT phase congruence and omitted-fiber zero-erasure lemma, exact $\Z[\zeta_{12}]$ verification of a shifted-label $(12,2)$ mask and the $(12,3)$ boundary guard failure, symbolic proofs of the odd-$N$ disjoint-pair triple-collision bound, the rank-$2$ Welch trace-square inequality, the exact per-row stability identity, the exact $\Z[\sqrt{3}]$ algebraic identities for $g=(\sqrt{3}-1)/2$ and $9-4\sqrt{3}$, and exhaustive kernel verification of all $27$ two-entry-per-column patterns at $N=3$.
+\end{enumerate}
+
+\bibliographystyle{amsplain}
+\bibliography{references}
+
+\end{document}
